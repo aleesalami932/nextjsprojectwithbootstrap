@@ -1,12 +1,41 @@
 /* eslint-disable react/jsx-key */
-import React from "react";
+import React, { useState } from "react";
 import Card from "../../UI/Cards/LearningCards";
 import {
   ILearningMethodePros,
   LearningMethode,
 } from "../../context/Interfaces";
+import { ref, onValue } from "firebase/database";
+import { db } from "../../firebase";
+
+export async function getStaticProps() {
+  const learningMethode = ref(db, "learnig_methodes/");
+  onValue(learningMethode, (snapshot) => {
+    const data = snapshot.val();
+  });
+  // By returning { props: { posts } }, the Blog component
+  // will receive `posts` as a prop at build time
+  return {
+    props: {
+      learningMethode,
+    },
+  };
+}
+
+function splitDataToArray(data) {
+  for (const methodes in data) {
+    console.log(`${methodes}: ${data[methodes]}`);
+  }
+}
 
 const Boxes = (props: ILearningMethodePros) => {
+  const [data, setData] = useState();
+
+  const learningMethode = ref(db, "learnig_methodes/");
+  onValue(learningMethode, (snapshot) => {
+    const data = snapshot.val();
+    splitDataToArray(data);
+  });
   return (
     <section className="p-5">
       <div className="container">
@@ -32,3 +61,20 @@ const Boxes = (props: ILearningMethodePros) => {
 };
 
 export default Boxes;
+
+// {
+//   Object.values(data).forEach((o) => {
+//     return o.map((item) => {
+//       <div className="col-md">
+//         <Card
+//           key={item.methodeId}
+//           methodeImg={item.methodeImg}
+//           methodeDescription={item.methodeDescription}
+//           methodeId={item.methodeId}
+//           methodeName={item.methodeName}
+//           methodeClipart={item.methodeClipart}
+//         />
+//       </div>;
+//     });
+//   });
+// }

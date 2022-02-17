@@ -1,7 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import NavBar from "../components/Navbar";
 import Showcase from "../components/Showcase";
 import NewsLetter from "../components/NewsLetter";
@@ -16,7 +13,6 @@ import {
 } from "../context/DummyData";
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import FAQ from "../components/Faq";
-import Instructors from "../components/Instructors";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 
@@ -34,7 +30,7 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   };
 };
-// { BoxesData, contactData, faq, instructorsInfo }
+
 const Home: NextPage = () => {
   return (
     <div>

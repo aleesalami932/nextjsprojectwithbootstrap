@@ -1,7 +1,10 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  console.log(isAuth);
   return (
     <Navbar bg="dark" expand="lg" variant="dark" fixed="top" className="py-3">
       <Container>
@@ -12,7 +15,11 @@ const NavBar = () => {
             <Nav.Link href="/#learning">Learning Material</Nav.Link>
             <Nav.Link href="/#questions">Questions</Nav.Link>
             <Nav.Link href="/#instructors">Instructors</Nav.Link>
-            <Nav.Link href="/login">Login/Signup</Nav.Link>
+            {!isAuth ? (
+              <Nav.Link href="/login">Login/Signup</Nav.Link>
+            ) : (
+              <Nav.Link href="/login">Profile</Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
