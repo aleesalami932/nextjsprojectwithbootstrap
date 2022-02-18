@@ -3,11 +3,15 @@ import { useRouter } from "next/router";
 import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { auth, db } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { ref, set } from "firebase/database";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/store";
+import { useSingUserHelper } from "../../helper/singUser";
 
 interface Modalprops {
   show: boolean;
@@ -33,26 +37,50 @@ const Signup_Modal: React.FC<Modalprops> = ({
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const isLoading = useSelector((state) => state.auth.loading);
   const dispatch = useDispatch();
 
   function signUpUser(data: Data) {
-    const userId = Date.now().toString();
-    createUserWithEmailAndPassword(auth, data.email, data.password!)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        set(ref(db, "users/" + userId), {
-          firstName: data.firstName,
-          lastName: data.lastName,
+    dispatch(authActions.setLoading(true));
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA-z1uq8DNREKJRa4syC1zrjh-8H_vR1N0",
+      {
+        method: "POST",
+        body: JSON.stringify({
           email: data.email,
-          phone: data.phone,
-        });
-        dispatch(authActions.login());
-        router.push("/");
+          password: data.password,
+          returnSecureToken: true,
+        }),
+        headers: { "Content-Type": "application/json" },
+      }
+    )
+      .then((res) => {
+        dispatch(authActions.setLoading(false));
+        if (res.ok) {
+          const userId = Date.now().toString();
+          set(ref(db, "users/" + userId), {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+          });
+          router.push("/welcome");
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Authentication Failed";
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+            throw new Error(errorMessage);
+          });
+        }
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorMessage);
+      .then((data) => {
+        dispatch(authActions.login(data.idToken));
+      })
+      .catch((err) => {
+        alert(err.message);
       });
   }
 
@@ -174,9 +202,12 @@ const Signup_Modal: React.FC<Modalprops> = ({
               <p className="text-danger mt-2">{errors.password.message}</p>
             )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            Signup
-          </button>
+          {isLoading && <p className="lead">Loading Please wait</p>}
+          {!isLoading && (
+            <button type="submit" className="btn btn-primary">
+              Signup
+            </button>
+          )}
         </form>
       </Modal.Body>
       <Modal.Footer>

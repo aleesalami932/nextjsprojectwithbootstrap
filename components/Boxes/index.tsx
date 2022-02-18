@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../UI/Cards/LearningCards";
 import {
   ILearningMethodePros,
@@ -22,20 +22,13 @@ export async function getStaticProps() {
   };
 }
 
-function splitDataToArray(data) {
-  for (const methodes in data) {
-    console.log(`${methodes}: ${data[methodes]}`);
-  }
-}
-
 const Boxes = (props: ILearningMethodePros) => {
   const [data, setData] = useState();
-
   const learningMethode = ref(db, "learnig_methodes/");
   onValue(learningMethode, (snapshot) => {
     const data = snapshot.val();
-    splitDataToArray(data);
   });
+
   return (
     <section className="p-5">
       <div className="container">

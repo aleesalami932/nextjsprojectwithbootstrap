@@ -11,10 +11,11 @@ import {
   DUMMY_FAQ,
   DUMMY_INATRUCTORS,
 } from "../context/DummyData";
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import FAQ from "../components/Faq";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
+import { useDispatch, useSelector } from "react-redux";
 
 export const getStaticProps: GetStaticProps = async () => {
   const BoxesData = DUMMY_LEARNING_MATIRAL;
@@ -32,6 +33,12 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Home: NextPage = () => {
+  const isauth = useSelector((state) => state.auth.isAuthenticated);
+  const idtoken = useSelector((state) => state.auth.token);
+
+  console.log(isauth, idtoken);
+  const dispatch = useDispatch();
+  // dispatch(authActions.setToken(token));
   return (
     <div>
       <NavBar />

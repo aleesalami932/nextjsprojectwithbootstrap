@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  console.log(isAuth);
   return (
     <Navbar bg="dark" expand="lg" variant="dark" fixed="top" className="py-3">
       <Container>
@@ -18,7 +17,7 @@ const NavBar = () => {
             {!isAuth ? (
               <Nav.Link href="/login">Login/Signup</Nav.Link>
             ) : (
-              <Nav.Link href="/login">Profile</Nav.Link>
+              <Nav.Link href="/welcome">Profile</Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>
