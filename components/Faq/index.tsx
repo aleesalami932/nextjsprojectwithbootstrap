@@ -2,6 +2,7 @@ import React from "react";
 import { Faqs, Faq } from "../../context/Interfaces";
 import AccordionItem from "../../UI/AccordionItems/AccordionItems";
 import { Accordion } from "react-bootstrap";
+
 const FAQ = (props: Faqs) => {
   return (
     <section className="p-5 text-center" id="questions">

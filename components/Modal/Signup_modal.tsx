@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { auth, db } from "../../firebase";
 import {
@@ -12,6 +12,8 @@ import { ref, set } from "firebase/database";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/store";
 import { useSingUserHelper } from "../../helper/singUser";
+import styles from "./styles.module.css";
+import CustomTextArea from "./CustomTextArea";
 
 interface Modalprops {
   show: boolean;
@@ -90,133 +92,164 @@ const Signup_Modal: React.FC<Modalprops> = ({
   const passFormat = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
   return (
+    // <Modal show={show} onHide={handleClose}>
+    //   <Modal.Header closeButton>
+    //     <Modal.Title>Signup</Modal.Title>
+    //   </Modal.Header>
+    //   <Modal.Body>
+    //     <p className="lead">Fill out this form to signup</p>
+    //     <form
+    //       onSubmit={handleSubmit((data) => {
+    //         signUpUser(data);
+    //       })}
+    //     >
+    //       <div className="mb-3">
+    //         <label htmlFor="first-name" className="col-form-lable">
+    //           First Name:{" "}
+    //         </label>
+    //         <input
+    //           {...register("firstName", {
+    //             required: "This feild is required",
+    //             minLength: {
+    //               value: 3,
+    //               message: "First name must be atleast 3 characters",
+    //             },
+    //           })}
+    //           type="text"
+    //           className="form-control"
+    //           id="first-name"
+    //         />
+    //         {errors.firstName && (
+    //           <p className="text-danger mt-2">{errors.firstName.message}</p>
+    //         )}
+    //       </div>
+    //       <div className="mb-3">
+    //         <label htmlFor="last-name" className="col-form-lable">
+    //           Last Name:{" "}
+    //         </label>
+    //         <input
+    //           {...register("lastName", {
+    //             required: "This feild is required",
+    //             minLength: {
+    //               value: 3,
+    //               message: "Last name must be atleast 3 characters",
+    //             },
+    //           })}
+    //           type="text"
+    //           className="form-control"
+    //           id="last-name"
+    //         />
+    //         {errors.lastName && (
+    //           <p className="text-danger mt-2">{errors.lastName.message}</p>
+    //         )}
+    //       </div>
+    //       <div className="mb-3">
+    //         <label htmlFor="phone" className="col-form-lable">
+    //           Phone:{" "}
+    //         </label>
+    //         <input
+    //           {...register("phone", {
+    //             required: "This feild is required",
+    //             minLength: {
+    //               value: 8,
+    //               message: "Please enter a valid phone Number",
+    //             },
+    //           })}
+    //           type="text"
+    //           className="form-control"
+    //           id="phone"
+    //         />
+    //         {errors.phone && (
+    //           <p className="text-danger mt-2">{errors.phone.message}</p>
+    //         )}
+    //       </div>
+    //       <div className="mb-3">
+    //         <label htmlFor="email" className="col-form-lable">
+    //           Email:{" "}
+    //         </label>
+    //         <input
+    //           {...register("email", {
+    //             required: "This feild is required",
+    //             pattern: {
+    //               message: "please enter a valid email adress",
+    //               value: mailFormat,
+    //             },
+    //           })}
+    //           type="text"
+    //           className="form-control"
+    //           id="email"
+    //         />
+    //         {errors.email && (
+    //           <p className="text-danger mt-2">{errors.email.message}</p>
+    //         )}
+    //       </div>
+    //       <div className="mb-3">
+    //         <label htmlFor="phone" className="col-form-lable">
+    //           Password:{" "}
+    //         </label>
+    //         <input
+    //           {...register("password", {
+    //             required: "this feild is required",
+    //             pattern: {
+    //               message:
+    //                 "password must be at least 8 charachters and contain special character",
+    //               value: passFormat,
+    //             },
+    //           })}
+    //           type="password"
+    //           className="form-control"
+    //           id="password"
+    //         />
+    //         {errors.password && (
+    //           <p className="text-danger mt-2">{errors.password.message}</p>
+    //         )}
+    //       </div>
+    //       {isLoading && <p className="lead">Loading Please wait</p>}
+    //       {!isLoading && (
+    //         <button type="submit" className="btn btn-primary">
+    //           Signup
+    //         </button>
+    //       )}
+    //     </form>
+    //   </Modal.Body>
+    //   <Modal.Footer>
+    //     <Button variant="secondary" onClick={handleClose}>
+    //       Close
+    //     </Button>
+
+    //     {/* <Button variant="primary">Signup</Button> */}
+    //   </Modal.Footer>
+    // </Modal>
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Signup</Modal.Title>
+        <Modal.Title>Publish News</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <p className="lead">Fill out this form to signup</p>
-        <form
-          onSubmit={handleSubmit((data) => {
-            signUpUser(data);
-          })}
-        >
-          <div className="mb-3">
-            <label htmlFor="first-name" className="col-form-lable">
-              First Name:{" "}
-            </label>
-            <input
-              {...register("firstName", {
-                required: "This feild is required",
-                minLength: {
-                  value: 3,
-                  message: "First name must be atleast 3 characters",
-                },
-              })}
-              type="text"
-              className="form-control"
-              id="first-name"
-            />
-            {errors.firstName && (
-              <p className="text-danger mt-2">{errors.firstName.message}</p>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="last-name" className="col-form-lable">
-              Last Name:{" "}
-            </label>
-            <input
-              {...register("lastName", {
-                required: "This feild is required",
-                minLength: {
-                  value: 3,
-                  message: "Last name must be atleast 3 characters",
-                },
-              })}
-              type="text"
-              className="form-control"
-              id="last-name"
-            />
-            {errors.lastName && (
-              <p className="text-danger mt-2">{errors.lastName.message}</p>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="phone" className="col-form-lable">
-              Phone:{" "}
-            </label>
-            <input
-              {...register("phone", {
-                required: "This feild is required",
-                minLength: {
-                  value: 8,
-                  message: "Please enter a valid phone Number",
-                },
-              })}
-              type="text"
-              className="form-control"
-              id="phone"
-            />
-            {errors.phone && (
-              <p className="text-danger mt-2">{errors.phone.message}</p>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="col-form-lable">
-              Email:{" "}
-            </label>
-            <input
-              {...register("email", {
-                required: "This feild is required",
-                pattern: {
-                  message: "please enter a valid email adress",
-                  value: mailFormat,
-                },
-              })}
-              type="text"
-              className="form-control"
-              id="email"
-            />
-            {errors.email && (
-              <p className="text-danger mt-2">{errors.email.message}</p>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="phone" className="col-form-lable">
-              Password:{" "}
-            </label>
-            <input
-              {...register("password", {
-                required: "this feild is required",
-                pattern: {
-                  message:
-                    "password must be at least 8 charachters and contain special character",
-                  value: passFormat,
-                },
-              })}
-              type="password"
-              className="form-control"
-              id="password"
-            />
-            {errors.password && (
-              <p className="text-danger mt-2">{errors.password.message}</p>
-            )}
-          </div>
-          {isLoading && <p className="lead">Loading Please wait</p>}
-          {!isLoading && (
-            <button type="submit" className="btn btn-primary">
-              Signup
-            </button>
-          )}
-        </form>
+      <Modal.Body className="border-0">
+        {/* <Form>
+          <Form.Group className="mb-3" controlId="newsArea">
+            <Form.Control as="textarea" rows={4} />
+          </Form.Group>
+          <Button
+            variant="primary"
+            type="button"
+            className={styles.buttonWidth}
+          >
+            hello
+          </Button>
+        </Form> */}
+        <CustomTextArea />
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
 
-        {/* <Button variant="primary">Signup</Button> */}
-      </Modal.Footer>
+      <div className="d-flex flex-row justify-content-start border-0">
+        <Modal.Footer className="border-0">
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </div>
     </Modal>
   );
 };

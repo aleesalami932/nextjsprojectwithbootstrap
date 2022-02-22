@@ -1,0 +1,35 @@
+.buttonWidth {
+  width: 29rem;
+}
+
+.editableDivBg {
+  background-color: aqua;
+  height: auto;
+  min-height: 10rem;
+}
+
+.textSpan {
+  display: block;
+}
+
+.editableDivBg:active {
+  border: none;
+}
+
+.imageDiv {
+  max-width: 100%;
+  aspect-ratio: 1;
+}
+
+.textareaNoBorder {
+  border: none;
+}
+
+.imageSpan2cols {
+  
+}
+
+/* .imageContainer {
+  width: 10px;
+  height: 10px;
+} */
