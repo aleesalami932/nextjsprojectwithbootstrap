@@ -21,15 +21,13 @@
   aspect-ratio: 1;
 }
 
+.smallerImage {
+  max-width: 100%;
+}
+
 .textareaNoBorder {
   border: none;
 }
 
 .imageSpan2cols {
-  
 }
-
-/* .imageContainer {
-  width: 10px;
-  height: 10px;
-} */

@@ -1,65 +1,38 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react'
-import styles from './styles.module.css'
+import { useState } from "react";
+import styles from "./styles.module.css";
 const CustomTextArea = () => {
-  let imgCount = 3
-  let oneImage = false
-  let twoImage = false
-  let threeImage = false
-  let fourImage = false
+  const [imageState, setImageState] = useState([]);
 
-  const [imageState, setImageState] = useState(['/images/hybrid.png'])
-
-  // const imageUploadHandler = () => {
-  //   const imageInput = document.getElementById('imageInput') as HTMLInputElement
-  //   if (!imageInput) {
-  //     alert('no image input')
-  //   } else if (!imageInput.files) {
-  //     alert('wrong input')
-  //   } else if (!imageInput.files[0]) {
-  //     alert('select file first')
-  //   } else {
-  //     let uploadedImage = []
-  //     console.log(imageInput.files)
-  //     uploadedImage.push(imageInput.files[0])
-  //     setImageState(uploadedImage)
-  //   }
-  // }
-
-  // console.log(imageState)
-  const imgArray: any = [
-    '/images/hybrid.png',
-    // '/images/hybrid.png',
-    // '/images/hybrid.png',
-    // '/images/hybrid.png',
-  ]
   const previewImage = () => {
-    const imageInput = document.getElementById('imageInput') as HTMLInputElement
-    const file = imageInput.files
-    if (file!.length != null) {
-      let fileReader = new FileReader()
-      fileReader.onload = function (event) {
-        imgArray.push(event.target?.result)
-        const img = event.target?.result?.toString()
-        setImageState((imgs) => [...imgs, img])
-        console.log(imageState)
-        console.log(imgArray)
+    const imageInput = document.getElementById(
+      "imageInput"
+    ) as HTMLInputElement;
+    const filesArray = imageInput.files;
+    console.log(filesArray);
+    if (filesArray) {
+      if (filesArray.length < 4) {
+        let fileReader = new FileReader();
+        fileReader.onload = function (event) {
+          const image = URL.createObjectURL(filesArray[0]).toString();
+          setImageState((imgs) => [...imgs, image]);
+        };
+        fileReader.readAsDataURL(filesArray![0]);
       }
-      fileReader.readAsDataURL(file![0])
+      if (filesArray.length > 4) {
+        alert("please select only 4 images");
+      }
     }
+  };
+
+  let length = imageState.length;
+  let isLastChild = false;
+  let maxNumberofImages = false;
+  let counter = 1;
+  if (length === 4) {
+    maxNumberofImages = true;
   }
-
-  let firstItem: boolean
-
-  //   className={firstItem ? `class of first item` : `of others`}
-
-  let length = imgArray.length
-  let isFirstChild = false
-  if (length === 1) {
-    isFirstChild = true
-  }
-  
 
   return (
     <div>
@@ -70,64 +43,69 @@ const CustomTextArea = () => {
           placeholder="enter text"
         ></textarea>
         <div className="row g-1 mt-1">
-          {imgArray.map((imgs) => {
-            if (length === 3) {
-              isFirstChild = true
-              return
-            } else {
-              return (
-                <div
+          {imageState.map((imgs: string) => {
+            if (counter === 3 && length === 3) {
+              isLastChild = true;
+            }
+            if (counter === 1 && length === 1) {
+              isLastChild = true;
+            }
+            counter++;
+            return (
+              <div
+                className={
+                  isLastChild ? `col-12 ${styles.imageContainer}` : `col-6`
+                }
+                key={imgs}
+              >
+                <img
+                  src={imgs}
                   className={
-                    isFirstChild
-                      ? `${styles.imageContainer}`
-                      : `col-6 ${styles.imageContainer}`
+                    isLastChild
+                      ? `${styles.smallerImage} `
+                      : `${styles.imageDiv}`
                   }
                   key={imgs}
-                >
-                  <img src={imgs} className={`${styles.imageDiv}`} key={imgs} />
-                </div>
-              )
-            }
+                />
+              </div>
+            );
           })}
         </div>
-        {threeImage && (
-          <div className="row">
-            <div className={`col g-1 `}>
-              <img
-                src="/images/hybrid.png"
-                className={`${styles.imageDiv} h-100`}
-              ></img>
-            </div>
-            <div className="col-6 g-1">
-              <div className={`rwo-6 ${styles.imageContainer}`}>
-                <img
-                  src="/images/hybrid.png"
-                  className={`${styles.imageDiv} img-fluid mb-2`}
-                ></img>
-              </div>
-              <div className={`row-6 ${styles.imageContainer}`}>
-                <img
-                  src="/images/hybrid.png"
-                  className={`${styles.imageDiv}`}
-                ></img>
-              </div>
-            </div>
-          </div>
+        {!maxNumberofImages && (
+          <input
+            type="file"
+            id="imageInput"
+            name="img"
+            accept="image/*"
+            hidden
+            multiple
+            onChange={previewImage}
+          />
         )}
-        <input
-          type="file"
-          id="imageInput"
-          name="img"
-          accept="image/*"
-          hidden
-          onChange={previewImage}
-        />
-        <label htmlFor="imageInput" className={`btn btn-primary mt-3 w-100`}>
-          hey
+        {maxNumberofImages && (
+          <input
+            type="file"
+            id="imageInput"
+            name="img"
+            accept="image/*"
+            hidden
+            disabled
+            onChange={previewImage}
+          />
+        )}
+        <label
+          htmlFor="imageInput"
+          className={
+            maxNumberofImages
+              ? `btn btn-secondary mt-3 w-100`
+              : `btn btn-primary mt-3 w-100`
+          }
+        >
+          Add Image
         </label>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CustomTextArea
+export default CustomTextArea;
