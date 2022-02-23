@@ -225,21 +225,8 @@ const Signup_Modal: React.FC<Modalprops> = ({
         <Modal.Title>Publish News</Modal.Title>
       </Modal.Header>
       <Modal.Body className="border-0">
-        {/* <Form>
-          <Form.Group className="mb-3" controlId="newsArea">
-            <Form.Control as="textarea" rows={4} />
-          </Form.Group>
-          <Button
-            variant="primary"
-            type="button"
-            className={styles.buttonWidth}
-          >
-            hello
-          </Button>
-        </Form> */}
         <CustomTextArea />
       </Modal.Body>
-
       <div className="d-flex flex-row justify-content-start border-0">
         <Modal.Footer className="border-0">
           <Button variant="primary" onClick={handleClose}>

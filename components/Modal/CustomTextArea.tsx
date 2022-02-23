@@ -11,16 +11,24 @@ const CustomTextArea = () => {
     ) as HTMLInputElement;
     const filesArray = imageInput.files;
     console.log(filesArray);
+    const multipleImages = [];
+    for (let i = 0; i < filesArray!.length; i++) {
+      multipleImages.push(filesArray?.item(i));
+    }
+    console.log(multipleImages);
+
     if (filesArray) {
-      if (filesArray.length < 4) {
+      if (filesArray.length + imageState.length <= 4) {
         let fileReader = new FileReader();
         fileReader.onload = function (event) {
-          const image = URL.createObjectURL(filesArray[0]).toString();
-          setImageState((imgs) => [...imgs, image]);
+          multipleImages.map((item) => {
+            const image = URL.createObjectURL(item).toString();
+            console.log("before changing the state:", image);
+            setImageState((imgs) => [...imgs, image]);
+          });
         };
         fileReader.readAsDataURL(filesArray![0]);
-      }
-      if (filesArray.length > 4) {
+      } else {
         alert("please select only 4 images");
       }
     }
