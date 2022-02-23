@@ -29,5 +29,12 @@
   border: none;
 }
 
-.imageSpan2cols {
+.removeAndEditButtonGroup {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.imageContainer {
+  position: relative;
 }

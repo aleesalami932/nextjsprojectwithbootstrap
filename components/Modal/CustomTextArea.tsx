@@ -1,37 +1,59 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
+import { ImageSource } from "mapbox-gl";
 import { useState } from "react";
 import styles from "./styles.module.css";
 const CustomTextArea = () => {
   const [imageState, setImageState] = useState([]);
+  const [fileState, setFileState] = useState([]);
 
   const previewImage = () => {
     const imageInput = document.getElementById(
       "imageInput"
     ) as HTMLInputElement;
+
     const filesArray = imageInput.files;
-    console.log(filesArray);
-    const multipleImages = [];
+    console.log("original files", filesArray);
+    const multipleImages: any = [];
+
     for (let i = 0; i < filesArray!.length; i++) {
-      multipleImages.push(filesArray?.item(i));
+      const imageFile = {
+        file: filesArray?.item(i),
+        id:
+          filesArray?.item(i)?.lastModified! + Math.floor(Math.random() * 101),
+      };
+      multipleImages.push(imageFile);
     }
-    console.log(multipleImages);
+
+    console.log("multiple images", multipleImages);
 
     if (filesArray) {
       if (filesArray.length + imageState.length <= 4) {
         let fileReader = new FileReader();
+
         fileReader.onload = function (event) {
           multipleImages.map((item) => {
-            const image = URL.createObjectURL(item).toString();
-            console.log("before changing the state:", image);
-            setImageState((imgs) => [...imgs, image]);
+            const image = URL.createObjectURL(item.file).toString();
+            const imgWithId = { img: image, id: item.id };
+            setImageState((imgs) => [...imgs, imgWithId]);
+            setFileState((file) => [...file, item]);
           });
         };
+
         fileReader.readAsDataURL(filesArray![0]);
       } else {
         alert("please select only 4 images");
       }
     }
+  };
+
+  const removeImage = (id) => {
+    setImageState((imageState) =>
+      imageState.filter((imageState) => imageState.id !== id)
+    );
+    setFileState((fileState) =>
+      fileState.filter((fileState) => fileState.id !== id)
+    );
   };
 
   let length = imageState.length;
@@ -51,7 +73,9 @@ const CustomTextArea = () => {
           placeholder="enter text"
         ></textarea>
         <div className="row g-1 mt-1">
-          {imageState.map((imgs: string) => {
+          {console.log("image state before mapping", imageState)}
+          {console.log("file state before mapping", fileState)}
+          {imageState.map((imgs) => {
             if (counter === 3 && length === 3) {
               isLastChild = true;
             }
@@ -62,19 +86,29 @@ const CustomTextArea = () => {
             return (
               <div
                 className={
-                  isLastChild ? `col-12 ${styles.imageContainer}` : `col-6`
+                  isLastChild
+                    ? `col-12 ${styles.imageContainer}`
+                    : `col-6 ${styles.imageContainer}`
                 }
-                key={imgs}
+                key={imgs.id}
               >
                 <img
-                  src={imgs}
+                  src={imgs.img}
                   className={
                     isLastChild
                       ? `${styles.smallerImage} `
                       : `${styles.imageDiv}`
                   }
-                  key={imgs}
+                  key={imgs.id}
                 />
+                <div
+                  className={`container my-2 ${styles.removeAndEditButtonGroup}`}
+                >
+                  <button className="mx-2" onClick={() => removeImage(imgs.id)}>
+                    remove
+                  </button>
+                  <button>hey</button>
+                </div>
               </div>
             );
           })}
